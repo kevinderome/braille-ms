@@ -1,0 +1,145 @@
+# importations des bibliothèques
+import orca.orca
+#import orca.textObj
+import orca.speech
+import orca.keybindings
+import orca.braille
+import orca.input_event
+import orca.chnames
+from orca.orca_i18n import _
+
+# correction des prononciations des caractères spéciaux
+punctuation_fr = {
+	'.':'point',
+	'-':'tiret',
+	',':'virgule',
+	';':'point-virgule',
+	'!':'point d\'exclamation',
+	'£':'livre',
+	':':'deux-points',
+	'?':'point d\'interrogation',
+	'"':'guillemet',
+	'^':'accent circonflexe',
+	'`':'accent grave',
+	'%':'pourcent',
+	'/':'barre oblique',
+	'&':'et commercial',
+	'@':'arobase',
+	'é':'e accent aigu',
+	'(':'parenthèse ouvrante',
+	')':'parenthèse fermante',
+	'[':'crochet ouvrant',
+	']':'crochet fermant',
+	'{':'accolade ouvrante',
+	'}':'accolade fermante',
+	'ç':'c cédille',
+	'=':'égal',
+	'°':'degré',
+	'<':'inférieur',
+	'>':'supérieur',
+	'*':'astérisque'
+}
+for i in punctuation_fr:
+	orca.chnames.chnames[i] = punctuation_fr[i]
+
+# paramètres pour raccourci personnalisés
+myKeyBindings = orca.keybindings.KeyBindings()
+orca.settings.keyBindingsMap["default"] = myKeyBindings
+
+# script status Battery
+def getBatteryInfo(script, inputEvent=None):
+	from subprocess import Popen, PIPE
+	from re import findall
+	acpi=Popen("acpi",stdout = PIPE, stderr = PIPE,shell = True)
+	batteryInfo = str(acpi.stdout.read())
+	if len(acpi.stderr.read())>3:
+		batteryInfo = 'Erreur : acpi non trouvé. Veuillez l\'installer pour utiliser ce script.'
+	else:
+		batteryInfo=batteryInfo.replace('b\'','')
+		batteryInfo=batteryInfo.replace('\\n\'','')
+		if len(findall('Battery',batteryInfo))==1:
+			batteryInfo=batteryInfo.replace('Battery 0: ','')
+		translate_fr={
+			'remaining':'restant',
+			'Charging':'En charge',
+			'until charged':'avant charge complète',
+			'Full':'Complète',
+			'will never fully charge':'ne jamais la charger complètement',
+			'Battery':'Batterie',
+			'Unknown':'Inconnu',
+			'Discharging':'Sur batterie'
+		}
+		for i in translate_fr:
+			batteryInfo=batteryInfo.replace(i, translate_fr[i])
+	orca.speech.speak(batteryInfo)
+	orca.braille.displayMessage(batteryInfo)
+	return True
+## défiinition du raccourci
+getBatteryInfoHandler = orca.input_event.InputEventHandler(getBatteryInfo,"Indicate the battery status.")
+myKeyBindings.add(orca.keybindings.KeyBinding("b",
+                orca.keybindings.defaultModifierMask,
+                orca.keybindings.ORCA_MODIFIER_MASK,
+	getBatteryInfoHandler))
+
+# script Status Dropbox
+def getStateDropbox(script, inputEvent=None):
+	from subprocess import Popen, PIPE
+	from re import findall
+	dropbox=Popen("dropbox status",stdout = PIPE, stderr = PIPE,shell = True)
+	stateDropbox = str(dropbox.stdout.read())
+	if len(dropbox.stderr.read())>3:
+		stateDropbox = 'Dropbox non trouvé.'
+	else:
+		stateDropbox=stateDropbox.replace('b\'','')
+		stateDropbox=stateDropbox.replace('b"','')
+		stateDropbox=stateDropbox.replace('\\n\'','')
+		stateDropbox=stateDropbox.replace('\\n"','')
+		stateDropbox=stateDropbox.replace('\\n','. ')
+		translate_fr={
+			'remaining':'restants',
+			'Downloading':'Téléchargement de',
+			'Uploading':'Transfert de',
+			'file list':'la liste des fichiers',
+			'left':'restants',
+			'files':'fichiers',
+			'isn\'t running':'n\'est pas lancé',
+			'day':'jour',
+			'heures restants':'heures restantes',
+			'hrs':'heures',		
+			'Syncing':'Syncronisation',
+			'Indexing':'Indexation',
+			'Connecting':'Connexion'
+		}
+		for i in translate_fr:
+			stateDropbox=stateDropbox.replace(i, translate_fr[i])
+	orca.speech.speak(stateDropbox)
+	orca.braille.displayMessage(stateDropbox)
+	return True
+## définition du raccourci
+getStateDropboxHandler = orca.input_event.InputEventHandler(getStateDropbox,"Indicate the dropbox status.")
+myKeyBindings.add(orca.keybindings.KeyBinding("d",
+	orca.keybindings.defaultModifierMask,
+	orca.keybindings.ORCA_MODIFIER_MASK,
+	getStateDropboxHandler))
+
+# ping
+def pingCheck(script, inputEvent=None):
+	from subprocess import Popen, PIPE
+	ping=Popen("ping -c1 8.8.8.8 | grep ttl",stdout = PIPE, stderr = PIPE,shell = True)
+	pingInfo = str(ping.stdout.read())
+	if len(ping.stderr.read())>10:
+		pingInfo = 'Pas de ping.'
+	else:
+		pingInfo=pingInfo.replace('b\'','')
+		pingInfo=pingInfo.replace('\\n\'','')
+	orca.speech.speak(pingInfo)
+	orca.braille.displayMessage(pingInfo)
+	return True
+
+## définition du raccourci
+pingCheckHandler = orca.input_event.InputEventHandler(pingCheck,
+	"Check ping.")
+myKeyBindings.add(orca.keybindings.KeyBinding("g",
+	orca.keybindings.defaultModifierMask,
+	orca.keybindings.ORCA_MODIFIER_MASK,
+pingCheckHandler))

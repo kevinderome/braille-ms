@@ -1,0 +1,39 @@
+#!/usr/bin/env python3.4
+import brlapi
+import time
+import os
+from mylibbraille.brl_print import *
+
+myfile = open("modules/modules.kdp",'r')
+modules = myfile.read()
+modules = modules.split("\n")
+i = 0
+
+while i < len(modules):
+    modules[i] = modules[i].split(":")
+    i += 1
+nav = 0
+i = 0
+rp = 1
+while 42:
+    brl_print(modules[i][0], rp)
+    b = brlapi.Connection()
+    b.enterTtyMode()
+    nav = b.readKey()
+    if nav == 536870914 and i < len(modules) - 1:
+        i += 1
+        rp = 1
+    elif nav == 536870913 and i > 0:
+        i -= 1
+        rp = 1
+    elif nav == 65293:
+        os.system("modules/"+modules[i][1]+"main")
+    elif nav == 536870935 and rp > 1:
+        rp = rp - 1
+    elif nav == 536870936:
+        rp = rp + 1
+    elif nav == 120:
+        exit(0)
+    else:
+        b.writeText("Erreur: Touche invalide")
+        time.sleep(0.5)

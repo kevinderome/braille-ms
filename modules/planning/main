@@ -1,0 +1,22 @@
+#!/usr/bin/env python3.4
+import os
+import brlapi
+import sys
+import time
+from mylibbraille.brl_print import *
+from mylibbraille.manage_event import *
+
+init_event()
+while 42:
+    brl_print("Ajouter  Consulter  Réinitialiser      X", 0)
+    b = brlapi.Connection()
+    b.enterTtyMode()
+    key = b.readKey()
+    if key == 97:
+        add_event()
+    elif key == 99:
+        consult_event()
+    elif key == 114:
+        reset_event()
+    elif key == 120 or key == 536936487:
+        exit(0)
