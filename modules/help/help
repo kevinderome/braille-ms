@@ -1,11 +1,8 @@
-Page d'aide
+Page de manuel SM-braille
 
-application dispo
-* planing
-Visualisation de votre planing.
-* horloge
-Consultation de l'heure en temps réel : hh:mm:ss
-* aide
-page de manuel pour utiliser la plateforme modulaire.
+1: Qu'est-ce que braille-ms ?
 
-Derome_k
+   Braille-ms (modular system) est un gestionnaire d'application braille.
+   Le but est de poposer une suite d'apply totalement accessible et en braille.
+   ces derniere pour etre en braille simple ou en dialogue voyant/non-vuyant.
+   
