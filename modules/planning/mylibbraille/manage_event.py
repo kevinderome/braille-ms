@@ -5,56 +5,7 @@ import os
 import re
 import sqlite3
 import datetime
-import re
-
-def     msgb(txt):
-    try:
-        b = brlapi.Connection()
-        b.enterTtyMode()
-        b.writeText(txt)
-        b.readKey()
-    finally:
-        return 0
-
-def     flashb(txt):
-    try:
-        b = brlapi.Connection()
-        b.enterTtyMode()
-        b.writeText(str(txt))
-        time.sleep(2)
-        del(b)
-    finally:
-        return 0
-
-def     inputb(txt):
-    b = brlapi.Connection()
-    b.enterTtyMode()
-    r = 0
-    key = ""
-    i = len(txt)+1 
-    tmp = 0
-    while tmp != 65293:
-        b.writeText(txt+key, i)
-        tmp = b.readKey()
-        if len(key) > 39:
-            ts = key[41:]
-            b.writeText(ts, i)
-        if tmp <= 255:
-            key += chr(tmp)
-            i += 1
-        elif tmp == 65288 and (len(key)) < i:
-            key = key[:-1]
-            i -= 1
-            if len(key) == 0:
-                b.writeText(txt+" ", i)
-                key = ""
-                if i == len(txt):
-                    i = len(txt)+1
-                elif i == 41:
-                    return key
-        elif tmp == 536936448:
-            return -1
-    return key
+from .braille import *
 
 def     add_event():
     bdd = sqlite3.connect('agenda.db')
@@ -84,17 +35,29 @@ def     add_event():
     bdd.commit()
     bdd.close()
     return 0
-def     count_event(date):
-    bdd = sqlite3.connect('agenda.db')
-    cursor = bdd.cursor()
-    count = cursor.execute("""SELECT COUNT(time_e) FROM planning WHERE date_e=?""", (date,))
-    count = count.fetchall()
-    bdd.close()
-    return int(count[0][0])
 
 def     consult_event():
-    
-    flashb("Aucun évênement.")
+    i = 0
+    bdd = sqlite3.connect('agenda.db')
+    cursor = bdd.cursor()
+    planning = cursor.execute("""select date_e,count(time_e) from planning group by date_e""")
+    planning = planning.fetchall()
+    print(planning)
+    bdd.close()
+    max = len(planning)
+    print(max)
+    if max > 0:
+        while 42:
+            printb(str(planning[i][0])+" --------------> "+str(planning[i][1])+" event(s)", 0)
+            key = get_key()
+            if key == 97 and i != 0:
+                i = i - 1
+            elif key == 98 and i < max:
+                i = i + 1
+            elif key == 99:
+                return planning[i][0]
+    else:
+        flashb("Aucun évênement.")
     return 0
 
 def     reset_event():

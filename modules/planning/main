@@ -3,12 +3,12 @@ import os
 import brlapi
 import sys
 import time
-from mylibbraille.brl_print import *
 from mylibbraille.manage_event import *
+from mylibbraille.braille import *
 
 init_event()
 while 42:
-    brl_print("Ajouter  Consulter  Réinitialiser      X", 0)
+    printb("Ajouter  Consulter  Réinitialiser      X", 0)
     b = brlapi.Connection()
     b.enterTtyMode()
     key = b.readKey()
