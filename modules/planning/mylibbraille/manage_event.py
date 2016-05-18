@@ -1,5 +1,4 @@
 #!/usr/bin/env python3.4
-import brlapi
 import time
 import os
 import re
@@ -36,29 +35,58 @@ def     add_event():
     bdd.close()
     return 0
 
-def     consult_event():
+def     consult_date():
     i = 0
     bdd = sqlite3.connect('agenda.db')
     cursor = bdd.cursor()
     planning = cursor.execute("""select date_e,count(time_e) from planning group by date_e""")
     planning = planning.fetchall()
-    print(planning)
     bdd.close()
-    max = len(planning)
-    print(max)
-    if max > 0:
+    maxt = len(planning)
+    if maxt > 0:
         while 42:
             printb(str(planning[i][0])+" --------------> "+str(planning[i][1])+" event(s)", 0)
             key = get_key()
-            if key == 97 and i != 0:
+            if key == 536870913 and i != 0:
                 i = i - 1
-            elif key == 98 and i < max:
+            elif i < (maxt - 1) and key ==  536870914:
                 i = i + 1
-            elif key == 99:
+            elif key == 536870943:
                 return planning[i][0]
+            elif key ==  536936448:
+                return -1
     else:
         flashb("Aucun évênement.")
     return 0
+
+def     consult_time(date):
+    i = 0
+    if date == -1:
+        return -1
+    bdd = sqlite3.Connection('agenda.db')
+    cursor = bdd.cursor()
+    event = cursor.execute("""select time_e, note from planning where date_e=?""", [date])
+    event = event.fetchall()
+    maxt = len(event)
+    while 42:
+        printb(str(event[i][0][:-2])+str(event[i][1]), 0)
+        key = get_key()
+        if key == 536870913 and i != 0:
+            i = i - 1
+        elif i < (maxt - 1) and key ==  536870914:
+                i = i + 1
+        elif key == 536870943:
+            flashb("rien de prévue")
+        elif key == 536936448:
+            return -1
+
+def     event_manager():
+    while 42:
+        date = consult_date()
+        if date == -1:
+            return -1
+        date = consult_time(date)
+
 
 def     reset_event():
     b = brlapi.Connection()

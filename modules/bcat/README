@@ -1,0 +1,6 @@
+#name : bcat
+#author : Kevin Derome
+#version : 1.0
+#status : beta
+#type : utility
+#language : C

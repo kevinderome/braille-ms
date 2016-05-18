@@ -6,17 +6,17 @@ import time
 from mylibbraille.manage_event import *
 from mylibbraille.braille import *
 
-init_event()
-while 42:
-    printb("Ajouter  Consulter  Réinitialiser      X", 0)
-    b = brlapi.Connection()
-    b.enterTtyMode()
-    key = b.readKey()
-    if key == 97:
-        add_event()
-    elif key == 99:
-        consult_event()
-    elif key == 114:
-        reset_event()
-    elif key == 120 or key == 536936487:
-        exit(0)
+def     main():
+    init_event()
+    while 42:
+        printb("Ajouter  Consulter  Réinitialiser      X", 0)
+        key = get_key()
+        if key == 97:
+            add_event()
+        elif key == 99:
+            event_manager()
+        elif key == 114:
+            reset_event()
+        elif key == 120 or key == 536936487:
+            exit(0)
+main()
