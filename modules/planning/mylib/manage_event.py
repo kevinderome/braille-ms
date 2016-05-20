@@ -6,7 +6,8 @@ import sqlite3
 import datetime
 from .braille import *
 
-def     add_event():
+
+def add_event():
     bdd = sqlite3.connect('agenda.db')
     time = ""
     cursor = bdd.cursor()
@@ -29,17 +30,20 @@ def     add_event():
         return 0
     # insert to db : agenda -> planing
     cursor.execute("""
-    INSERT INTO planning(date_e, time_e, note) VALUES( ?, ?, ?)""", [date, time+':00', note])
+    INSERT INTO planning(date_e, time_e, note) VALUES( ?, ?, ?)
+    """, [date, time+':00', note])
     flashb("ajout réussie :)")
     bdd.commit()
     bdd.close()
     return 0
 
-def     consult_date():
+
+def consult_date():
     i = 0
     bdd = sqlite3.connect('agenda.db')
     cursor = bdd.cursor()
-    planning = cursor.execute("""select date_e,count(time_e) from planning group by date_e""")
+    planning = cursor.execute("""select date_e,count(time_e)
+    from planning group by date_e""")
     planning = planning.fetchall()
     bdd.close()
     maxt = len(planning)
@@ -49,23 +53,25 @@ def     consult_date():
             key = get_key()
             if key == 536870913 and i != 0:
                 i = i - 1
-            elif i < (maxt - 1) and key ==  536870914:
+            elif i < (maxt - 1) and key == 536870914:
                 i = i + 1
             elif key == 536870943:
                 return planning[i][0]
-            elif key ==  536936448:
+            elif key == 536936448:
                 return -1
     else:
         flashb("Aucun évênement.")
     return 0
 
-def     consult_time(date):
+
+def consult_time(date):
     i = 0
     if date == -1:
         return -1
     bdd = sqlite3.Connection('agenda.db')
     cursor = bdd.cursor()
-    event = cursor.execute("""select time_e, note from planning where date_e=?""", [date])
+    event = cursor.execute("""select time_e, note from planning
+    where date_e=?""", [date])
     event = event.fetchall()
     maxt = len(event)
     while 42:
@@ -73,14 +79,15 @@ def     consult_time(date):
         key = get_key()
         if key == 536870913 and i != 0:
             i = i - 1
-        elif i < (maxt - 1) and key ==  536870914:
+        elif i < (maxt - 1) and key == 536870914:
                 i = i + 1
         elif key == 536870943:
             flashb("rien de prévue")
         elif key == 536936448:
             return -1
 
-def     event_manager():
+
+def event_manager():
     while 42:
         date = consult_date()
         if date == -1:
@@ -88,7 +95,7 @@ def     event_manager():
         date = consult_time(date)
 
 
-def     reset_event():
+def reset_event():
     b = brlapi.Connection()
     b.enterTtyMode()
     choix = 0
@@ -106,7 +113,8 @@ def     reset_event():
         flashb("Réinitialisation réussie :)")
     return 0
 
-def     init_event():
+
+def init_event():
     bdd = sqlite3.connect("agenda.db")
     cursor = bdd.cursor()
     cursor.execute("""
@@ -117,4 +125,3 @@ def     init_event():
     bdd.commit()
     bdd.close()
     return 0
-

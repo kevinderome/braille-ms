@@ -1,8 +1,9 @@
-#name : planning
-#author : Kevin Derome
-#version : 1.0
-#status : beta
-#type : manager
-#language : python (3.4)
-#dependances : No
+#general
+name : planning
+author : Kevin Derome
+version : 1.0
+status : beta
+type : manager
+language : python (3.4)
+dependences : No
 

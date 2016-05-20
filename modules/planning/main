@@ -3,10 +3,11 @@ import os
 import brlapi
 import sys
 import time
-from mylibbraille.manage_event import *
-from mylibbraille.braille import *
+from mylib.manage_event import *
+from mylib.braille import *
 
-def     main():
+
+def main():
     init_event()
     while 42:
         printb("Ajouter  Consulter  Réinitialiser      X", 0)
