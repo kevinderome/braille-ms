@@ -4,6 +4,6 @@ author : Kevin Derome
 version : 1.0
 status : beta
 type : manager
-language : python (3.4)
-dependences : No
+language : python (3.4), SQL
+dependances : sqlite3, brlapi, re
 

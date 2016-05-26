@@ -1,4 +1,4 @@
-#!/usr/bin/env python3.4
+#!/usr/bin/python3
 import time
 import os
 import re

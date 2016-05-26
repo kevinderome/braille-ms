@@ -1,13 +1,21 @@
-#!/usr/bin/env python3.4
+#!/usr/bin/python3
 import brlapi
 import time
 
 
-def     printb(txt, pos):
+def get_funckey(txt):
+    key = 0
+    while 42:
+        printb(txt[:40], 0)
+        key = get_key()
+        if key > 256:
+            return str(key)
+
+
+def printb(txt, pos):
     b = brlapi.Connection()
     b.enterTtyMode()
     size = getattr(b, "displaySize")
-    
     if len(txt) < size[0]:
         b.writeText(txt[0:])
     elif (len(txt) - pos) < size[0]:
@@ -16,13 +24,15 @@ def     printb(txt, pos):
         b.writeText(txt[(pos * size[0]):(pos+1 * size[0])])
     return 0
 
-def     get_key():
+
+def get_key():
     b = brlapi.Connection()
     b.enterTtyMode()
     key = b.readKey()
     return key
 
-def     flashb(txt):
+
+def flashb(txt):
     try:
         b = brlapi.Connection()
         b.enterTtyMode()
@@ -32,7 +42,8 @@ def     flashb(txt):
     finally:
         return 0
 
-def     msgb(txt):
+
+def msgb(txt):
     try:
         b = brlapi.Connection()
         b.enterTtyMode()
@@ -41,12 +52,13 @@ def     msgb(txt):
     finally:
         return 0
 
-def     inputb(txt):
+
+def inputb(txt):
     b = brlapi.Connection()
     b.enterTtyMode()
     r = 0
     key = ""
-    i = len(txt)+1 
+    i = len(txt) + 1
     tmp = 0
     while tmp != 65293:
         b.writeText(txt+key, i)

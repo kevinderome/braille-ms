@@ -1,20 +1,21 @@
-#!/usr/bin/env python3.4
+#!/usr/bin/python3
 import brlapi
 from subprocess import Popen, PIPE
 from re import findall
 
-def	batinfo():
+
+def batinfo():
         key = 0
-        acpi = Popen("acpi",stdout = PIPE, stderr = PIPE,shell = True)
+        acpi = Popen("acpi", stdout = PIPE, stderr = PIPE, shell = True)
         batteryInfo = str(acpi.stdout.read())
-        if len(acpi.stderr.read())>3:
-                batteryInfo = 'Erreur : acpi non trouvé. Veuillez l\'installer pour utiliser ce script.'
+        if len(acpi.stderr.read()) > 3:
+                batteryInfo = 'Erreur : acpi non trouvé. Veuillez l\'installer pour utiliser ce module.'
         else:
-                batteryInfo = batteryInfo.replace('b\'','')
-                batteryInfo = batteryInfo.replace('\\n\'','')
-                if len(findall('Battery',batteryInfo))==1:
-                        batteryInfo=batteryInfo.replace('Battery 0: ','')
-                translate_fr={
+                batteryInfo = batteryInfo.replace('b\'' ,'')
+                batteryInfo = batteryInfo.replace('\\n\'', '')
+                if len(findall('Battery', batteryInfo)) == 1:
+                        batteryInfo = batteryInfo.replace('Battery 0: ','')
+                translate_fr = {
 			'remaining':'restant',
 			'Charging':'En charge',
 			'until charged':'avant charge complète',
@@ -25,7 +26,7 @@ def	batinfo():
 			'Discharging':'Sur batterie'
 		}
                 for i in translate_fr:
-                        batteryInfo=batteryInfo.replace(i, translate_fr[i])
+                        batteryInfo = batteryInfo.replace(i, translate_fr[i])
                 try:
                         b = brlapi.Connection()
                         b.enterTtyMode()
@@ -34,7 +35,8 @@ def	batinfo():
                 finally:
                         return key
 
-def     main():
+def main():
         batinfo()
+        return 0
 
 main()

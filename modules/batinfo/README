@@ -1,7 +1,8 @@
-#name : batinfo
-#author : Kevin Derome
-#version : 1.0
-#status : beta
-#type : utility
-#language : python (3.4)
-#depedances : acpi
+#general
+name : batinfo
+author : Kevin Derome and Adre Abush
+version : 1.0
+status : beta
+type : utility
+language : python (3.4)
+depedances : acpi
