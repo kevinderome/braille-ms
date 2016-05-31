@@ -1,6 +1,10 @@
 #!/usr/bin/python3
 import brlapi
 import time
+from .load_conf import *
+
+
+keyboard = init_bms()
 
 
 def get_funckey(txt):

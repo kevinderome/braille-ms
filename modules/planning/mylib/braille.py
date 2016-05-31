@@ -1,26 +1,34 @@
 #!/usr/bin/python3
 import brlapi
 import time
+from .load_conf import *
 
+keyboard = init_bms()
 
 def     printb(txt, pos):
-    b = brlapi.Connection()
-    b.enterTtyMode()
-    size = getattr(b, "displaySize")
-    
-    if len(txt) < size[0]:
-        b.writeText(txt[0:])
-    elif (len(txt) - pos) < size[0]:
-        b.writeText(txt[pos:])
-    else:
-        b.writeText(txt[(pos * size[0]):(pos+1 * size[0])])
-    return 0
+    try:
+        b = brlapi.Connection()
+        b.enterTtyMode()
+        size = getattr(b, "displaySize")    
+        if len(txt) < size[0]:
+            b.writeText(txt[0:])
+        elif (len(txt) - pos) < size[0]:
+            b.writeText(txt[pos:])
+        else:
+            b.writeText(txt[(pos * size[0]):(pos+1 * size[0])])
+    finally:
+        return 0
 
 def     get_key():
-    b = brlapi.Connection()
-    b.enterTtyMode()
-    key = b.readKey()
-    return key
+    key = -1
+    try:
+        b = brlapi.Connection()
+        b.enterTtyMode()
+        key = b.readKey()
+    finally:
+        if key < 256 and key > 0:
+            key = chr(key)
+        return key
 
 def     flashb(txt):
     try:

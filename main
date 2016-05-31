@@ -1,9 +1,7 @@
 #!/usr/bin/python3
 import os
 from mylib.braille import *
-from mylib.load_conf import *
 
-keyboard = init_bms()
 
 def load_modules():
     myfile = open("modules/modules.kdp", 'r')

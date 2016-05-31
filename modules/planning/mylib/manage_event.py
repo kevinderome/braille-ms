@@ -39,6 +39,7 @@ def add_event():
 
 
 def consult_date():
+    exec = True
     i = 0
     bdd = sqlite3.connect('agenda.db')
     cursor = bdd.cursor()
@@ -48,19 +49,20 @@ def consult_date():
     bdd.close()
     maxt = len(planning)
     if maxt > 0:
-        while 42:
+        while exec:
             printb(str(planning[i][0])+" --------------> "+str(planning[i][1])+" event(s)", 0)
             key = get_key()
-            if key == 536870913 and i != 0:
+            if key == keyboard["key_up"] and i != 0:
                 i = i - 1
-            elif i < (maxt - 1) and key == 536870914:
+            elif i < (maxt - 1) and key == keyboard["key_down"]:
                 i = i + 1
-            elif key == 536870943:
+            elif key == keyboard["key_ok"]:
                 return planning[i][0]
-            elif key == 536936448:
+            elif key == keyboard["first_cursor"]:
                 return -1
     else:
         flashb("Aucun évênement.")
+        return -1
     return 0
 
 
@@ -77,18 +79,19 @@ def consult_time(date):
     while 42:
         printb(str(event[i][0][:-2])+str(event[i][1]), 0)
         key = get_key()
-        if key == 536870913 and i != 0:
+        if key == keyboard["key_up"] and i != 0:
             i = i - 1
-        elif i < (maxt - 1) and key == 536870914:
+        elif i < (maxt - 1) and key == keyboard["key_down"]:
                 i = i + 1
-        elif key == 536870943:
+        elif key == keyboard["key_ok"]:
             flashb("rien de prévue")
-        elif key == 536936448:
+        elif key == keyboard["first_cursor"]:
             return -1
 
 
 def event_manager():
-    while 42:
+    exec = True
+    while exec:
         date = consult_date()
         if date == -1:
             return -1
@@ -115,6 +118,9 @@ def reset_event():
 
 
 def init_event():
+    ch = os.path.expanduser("~") + "/.braille-ms/planning/"
+    if os.path.exists(ch):
+        os.mkdirs(ch)
     bdd = sqlite3.connect("agenda.db")
     cursor = bdd.cursor()
     cursor.execute("""

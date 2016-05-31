@@ -8,16 +8,19 @@ from mylib.braille import *
 
 
 def main():
+    exec = True
     init_event()
-    while 42:
+    while exec:
         printb("Ajouter  Consulter  Réinitialiser      X", 0)
         key = get_key()
-        if key == 97:
+        if key == 'a':
             add_event()
-        elif key == 99:
+        elif key == 'c':
             event_manager()
-        elif key == 114:
+        elif key == 'r':
             reset_event()
-        elif key == 120 or key == 536936487:
-            exit(0)
+        elif key == 'x' or key == keyboard["last_cursor"]:
+            exec = False
+    return 0
+
 main()
